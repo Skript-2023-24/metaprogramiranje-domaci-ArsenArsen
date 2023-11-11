@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 require "forwardable"
+require "pp"
 
 # A column-based table
 class Worksheet
@@ -153,46 +154,46 @@ def section
 end
 
 section do
-  p ws
+  pp ws
 end
 
 section do
-  p ws.row 1
+  pp ws.row 1
 end
 
 section do
-  ws.each { |x| p x }
+  ws.each { |x| pp x }
 end
 
 section do
   id = ws["ID"]
-  p id
-  p id[1]
-  p id[1] = "20"
-  p id[1]
+  pp id
+  pp id[1]
+  pp id[1] = "20"
+  pp id[1]
 end
 
 section do
-  p ws.ID
-  p(ws.ID.filter { |i| i.to_i > 10 })
+  pp ws.ID
+  pp (ws.ID.filter { |i| i.to_i > 10 })
 end
 
 section do
-  p ws.ID.RN9
+  pp ws.ID.RN9
 end
 
 section do
   c = ws["Prva Kolona"]
-  p c.avg
-  p c.sum
+  pp c.avg
+  pp c.sum
 end
 
 section do
   ws2 = Worksheet.new ws.table.clone
   ws2.table.transform_values! { |i| i[1..2] }
-  ws3 = p ws - ws2
+  ws3 = pp ws - ws2
   puts
-  p ws - ws3
+  pp ws - ws3
   puts
-  p ws3 + ws2
+  pp ws3 + ws2
 end
