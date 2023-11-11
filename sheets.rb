@@ -17,7 +17,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 require "forwardable"
-require "pp"
 
 # A column-based table
 class Worksheet
@@ -33,7 +32,7 @@ class Worksheet
              .filter(&Worksheet.method(:string_list_nonempty))
              .transpose
              .filter(&Worksheet.method(:string_list_nonempty))
-             .to_h { |i| f, *r = i; [f, r] }
+             .to_h { |i| f, *r = i; [f.to_sym, r] }
   end
 
   def self.from_worksheet(wsheet)
@@ -41,7 +40,7 @@ class Worksheet
   end
 
   def row(idx)
-    return table.keys if idx.zero?
+    return table.keys.map(&:to_s) if idx.zero?
 
     idx -= 1 # Zero-indexed contents.
     table.map { |_j, i| i[idx] }
@@ -50,7 +49,7 @@ class Worksheet
   def rows
     table
       .to_a
-      .map { |x| h, t = x; [h, *t] }
+      .map { |x| h, t = x; [h.to_s, *t] }
       .transpose
   end
 
@@ -78,18 +77,22 @@ class Worksheet
   # TODO(arsen): merged fields?
 
   def [](name)
-    col = table[name]
+    pp table
+    col = table[name.to_sym]
     Column.new(self, col) unless col.nil?
   end
 
-  def respond_to_missing?(_, *)
+  def respond_to_missing?(name, *)
+    super if (self.[] name).nil?
     true
   end
 
   def method_missing(name, *args)
     raise "Function #{name} does not accept any arguments" unless args.empty?
 
-    self.[] name.to_s
+    c = self.[] name
+    super if c.nil?
+    c
   end
 
   def self.string_list_nonempty(lst)
@@ -181,7 +184,7 @@ end
 
 section do
   pp ws.ID
-  pp (ws.ID.filter { |i| i.to_i > 10 })
+  pp(ws.ID.filter { |i| i.to_i > 10 })
 end
 
 section do
