@@ -31,6 +31,7 @@ class Worksheet
              .filter { |row| row.none? { |i| /(sub)?total/i.match? i } }
              .filter { |row| row.any? { |i| !i.strip.empty? } }
              .transpose
+             .filter { |col| col.any? { |i| !i.strip.empty? } }
              .to_h { |i| f, *r = i; [f, r] }
   end
 
