@@ -30,9 +30,9 @@ class Worksheet
 
     @table = @table
              .filter { |row| row.none? { |i| /(sub)?total/i.match? i } }
-             .filter { |row| row.any? { |i| !i.strip.empty? } }
+             .filter(&Worksheet.method(:string_list_nonempty))
              .transpose
-             .filter { |col| col.any? { |i| !i.strip.empty? } }
+             .filter(&Worksheet.method(:string_list_nonempty))
              .to_h { |i| f, *r = i; [f, r] }
   end
 
@@ -91,6 +91,12 @@ class Worksheet
 
     self.[] name.to_s
   end
+
+  def self.string_list_nonempty(lst)
+    lst.any? { |x| !x.empty? }
+  end
+
+  private_class_method :string_list_nonempty
 end
 
 def integery?(str)
