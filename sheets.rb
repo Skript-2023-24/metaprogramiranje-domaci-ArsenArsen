@@ -154,7 +154,6 @@ session = GoogleDrive::Session.from_config "config.json"
 gsheet = session.spreadsheet_by_url "https://docs.google.com/spreadsheets/d/1NbTJHnaEKHzo0CByipPJ0DhSzAiZY0MeePOE4RmVYOA/edit"
 
 wsheet = gsheet.worksheets.find { 1 }
-p wsheet.rows
 ws = Worksheet.from_worksheet wsheet
 
 def section
