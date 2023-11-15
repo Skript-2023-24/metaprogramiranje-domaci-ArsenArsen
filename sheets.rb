@@ -135,8 +135,8 @@ class Column
 
   def_delegators :@column, :[], :[]=
 
-  def respond_to_missing?(_, *)
-    true
+  def respond_to_missing?(name, *)
+    @column.any? { |i| name == i } || super
   end
 
   def method_missing(name, *args)
