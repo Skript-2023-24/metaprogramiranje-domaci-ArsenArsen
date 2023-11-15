@@ -143,8 +143,10 @@ class Column
     raise "Function #{name} does not accept any arguments" unless args.empty?
 
     name = name.to_s
+    idx = @column.index { |i| name == i }
+    return nil if idx.nil?
     # One-indexed
-    @sheet.row 1 + @column.index { |i| name == i }
+    @sheet.row 1 + idx
   end
 end
 
